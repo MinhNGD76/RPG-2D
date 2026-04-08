@@ -6,20 +6,24 @@ public enum EnemyState
     Idle,
     Walking,
     Attacking,
+    Knockback,
 }
 
 public class Enemy_Movement : MonoBehaviour
 {
+    public float speed = 3f;
+    public float attackRange = 2f;
+    public float attackCooldown = 2f;
+    public float playerDetectRange = 5f;
+    public Transform detectionPoint;
+    public LayerMask playerLayer;
+
+    private float attackCooldownTimer;
     private Rigidbody2D rb;
     private Transform player;
     private Animator anim;
 
-    public float speed = 3f;
-    public float attackRange = 2f;
-
     private int facingDirection = -1;
-
-    
 
     private EnemyState enemyState;
 
@@ -32,23 +36,29 @@ public class Enemy_Movement : MonoBehaviour
 
     void Update()
     {
-        if (enemyState == EnemyState.Walking)
+        if(enemyState != EnemyState.Knockback)
         {
-            Walk();
+            CheckForPlayer();
+
+            if (attackCooldownTimer > 0)
+            {
+                attackCooldownTimer -= Time.deltaTime;
+            }
+            if (enemyState == EnemyState.Walking)
+            {
+                Walk();
+            }
+            else if (enemyState == EnemyState.Attacking)
+            {
+                Attack();
+            }
         }
-        else if(enemyState == EnemyState.Attacking)
-        {
-            Attack();
-        }
+        
     }
 
     void Walk()
     {
-        if(Vector2.Distance(transform.position, player.position) <= attackRange)
-        {
-            ChangeState(EnemyState.Attacking);
-        }
-        else if (player.position.x > transform.position.x && facingDirection == -1 ||
+        if (player.position.x > transform.position.x && facingDirection == -1 ||
                 player.position.x < transform.position.x && facingDirection == 1)
         {
             Flip();
@@ -80,16 +90,32 @@ public class Enemy_Movement : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void CheckForPlayer()
     {
-        if (collision.gameObject.tag == "Player")
+        Collider2D[] hits = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectRange, playerLayer);
+
+        if(hits.Length > 0)
+        {
+            player = hits[0].transform;
+
+            if (Vector2.Distance(transform.position, player.position) <= attackRange && attackCooldownTimer <= 0)
+            {
+                attackCooldownTimer = attackCooldown;
+                ChangeState(EnemyState.Attacking);
+            }
+            else if(Vector2.Distance(transform.position, player.position) > attackRange && enemyState != EnemyState.Attacking)
+            {
+                ChangeState(EnemyState.Walking);
+            }
+        }
+        else
         {
             rb.linearVelocity = Vector2.zero;
             ChangeState(EnemyState.Idle);
         }
     }
 
-    void ChangeState(EnemyState newState)
+    public void ChangeState(EnemyState newState)
     {
         if (enemyState == EnemyState.Idle)
             anim.SetBool("isIdle", false);
@@ -106,5 +132,11 @@ public class Enemy_Movement : MonoBehaviour
             anim.SetBool("isWalking", true);
         else if (enemyState == EnemyState.Attacking)
             anim.SetBool("isAttacking", true);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(detectionPoint.position, playerDetectRange);
     }
 }

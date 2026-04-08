@@ -33,7 +33,7 @@ AnimationClip:
     - time: 0.5833333
       value: {fileID: -637619430680877308, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
     - time: 0.7
-      value: {fileID: -2701350933335208944, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
+      value: {fileID: 5867112988911455960, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -62,7 +62,7 @@ AnimationClip:
     - {fileID: -4900098501004535040, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
     - {fileID: 552807240558472972, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
     - {fileID: -637619430680877308, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
-    - {fileID: -2701350933335208944, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
+    - {fileID: 5867112988911455960, guid: a3c91b46c0926204fa1a20b111a7489b, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -73,7 +73,7 @@ AnimationClip:
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
-    m_LoopTime: 0
+    m_LoopTime: 1
     m_LoopBlend: 0
     m_LoopBlendOrientation: 0
     m_LoopBlendPositionY: 0
@@ -88,7 +88,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.35
+  - time: 0.46666667
     functionName: Attack
     data: 
     objectReferenceParameter: {fileID: 0}
